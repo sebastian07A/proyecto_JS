@@ -39,6 +39,11 @@ app.get("/productos/:categoria/:id", (req, res)=>{
     res.send(`<h1>Producto</h1><p>Categoría: ${categoria}</p><p>ID: ${id}</p>`);
 });
 
+app.get("/libros/:isbn", (req, res) => {
+    const isbn = req.params.isbn;
+    res.send(`<h1>Libro</h1><p>ISBN: ${isbn}</p>`);
+});
+
 app.listen(puerto, ()=>{
     console.log(`SERVIDOR http://localhost:${puerto}
         http://127.0.0.1:${puerto}`);
