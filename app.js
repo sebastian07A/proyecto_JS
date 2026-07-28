@@ -28,7 +28,13 @@ app.get("/presentacion/:id",(req,res)=>{
 });
 
 
+app.get("/productos/:categoria", (req, res) => {
+    const categoria = req.params.categoria;
+    res.send(`<h1>Productos</h1><p>Categoría: ${categoria}</p>`);
+});
+
+
 app.listen(puerto, ()=>{
-    console.log(`SERVIDOR http://localhost: ${puerto}
+    console.log(`SERVIDOR http://localhost:${puerto}
         http://127.0.0.1:${puerto}`);
 });
