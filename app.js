@@ -1,50 +1,18 @@
-import express from "express";//ES
-//mport {configDotenv} from "dotenv"
-//configDotenv()
-import "dotenv/config"
-
-//const express = require("express");
+const express = require( "express")
 const app = express();
-const puerto = process.env.PORT || 3500;
+const PORT = process.env.PORT || 3000;
 
 app.get("/",(req,res)=>{
-    res.send("Hola ficha 3407180 del SENA")
+    res.send(`<h1>Api aprendices</h1>`)
 });
 
-app.get("/misaludo",(req,res)=>{
-    res.send(`<h1>saludo</h1><p>Hola soy Sebas</p>`)
-});
-
-app.get("/cliente/:id",(req,res)=>{
-    const id = req.params.id
-    res.send(`<h1>Clientes</h1>
-        <p>Soy cliente con ID${id}</p>`)
-});
-
-app.get("/presentacion/:id",(req,res)=>{
-    const id = req.params.id
-    res.send(`<h1>Presentacion</h1>
-        <p>Soy sebastian aprendiz sena con ID${id}</p>`)
-});
+//Lista para crear endpoint
+app.get("api/aprendices", (req, res) => {
+    res.json({menssaje: "endpoint para listar aprendices"})
+})
 
 
-app.get("/productos/:categoria", (req, res) => {
-    const categoria = req.params.categoria;
-    res.send(`<h1>Productos</h1><p>Categoría: ${categoria}</p>`);
-});
-
-app.get("/productos/:categoria/:id", (req, res)=>{
-    const categoria = req.params.categoria;
-    const id = req.params.id;
-    res.send(`<h1>Producto</h1><p>Categoría: ${categoria}</p><p>ID: ${id}</p>`);
-});
-
-app.get("/libros/:isbn", (req, res) => {
-    const isbn = req.params.isbn;
-    res.send(`<h1>Libro</h1><p>ISBN: ${isbn}</p>`);
-});
-
-app.listen(puerto, ()=>{
-    console.log(`SERVIDOR http://localhost:${puerto}
-        http://127.0.0.1:${puerto}`);
+app.listen(PORT, ()=>{
+    console.log(`SERVIDOR http://localhost:${PORT}
+        http://127.0.0.1:${PORT}`);
 });
