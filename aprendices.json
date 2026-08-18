@@ -1,0 +1,38 @@
+[
+  {
+    "di": 1,
+    "nombre": "cami",
+    "correo": "cami@mail.com",
+    "imagen": "url"
+  },
+  {
+    "di": "2",
+    "nombre": "sebas",
+    "correo": "sebas@mail,com",
+    "imagen": "url"
+  },
+  {
+    "di": 1,
+    "nombre": "cami",
+    "correo": "cami@mail.com",
+    "imagen": "url"
+  },
+  {
+    "di": 1,
+    "nombre": "cami",
+    "correo": "cami@mail.com",
+    "imagen": "url"
+  },
+  {
+    "di": 1,
+    "nombre": "cami",
+    "correo": "cami@mail.com",
+    "imagen": "url"
+  },
+  {
+    "di": 1,
+    "nombre": "cami",
+    "correo": "cami@mail.com",
+    "imagen": "url"
+  }
+]
