@@ -1,7 +1,7 @@
 const { error } = require("console")
 const express = require("express")
 const app = express()
-  //configuracion de body-parse
+//configuracion de body-parse
 app.use(express.json())
 const sistemaArchivo = require("fs")
 const ruta = require("path")
@@ -45,37 +45,64 @@ app.post("/api/aprendices", (req, res) => {
                     return res.json({ Error: "No se puede reguitrar." })
                 }
                 res.status(201).json(datosAprendiz)
-        })
+            })
     })
 })
 
 //endpoint para modificar aprendices
-app.put  ("/api/aprendices/:di", (req, res) => {
+app.put("/api/aprendices/:di", (req, res) => {
     const diAprendiz = req.params.di
-    const datosAprendiz = req.body 
+    const datosAprendiz = req.body
     sistemaArchivo.readFile(rutaArchivojson, "utf-8", (error, datos) => {
-        if (error){
-            return res.status(500).json({Error:  "Error de conexion"})
+        if (error) {
+            return res.status(500).json({ Error: "Error de conexion" })
         }
-        let listaAprendices = JSON .parse(datos)
-           // actualizar aprendi
-        listaAprendices = listaAprendices.map (aprendiz => {
-            return aprendiz.di === diAprendiz ? {...aprendiz, ...datosAprendiz}:
-            aprendiz
+        let listaAprendices = JSON.parse(datos)
+        // actualizar aprendi
+        listaAprendices = listaAprendices.map(aprendiz => {
+            return aprendiz.di === diAprendiz ? { ...aprendiz, ...datosAprendiz } :
+                aprendiz
         })
         //escritura de archivo
         sistemaArchivo.writeFile(rutaArchivojson, JSON.stringify
-            (listaAprendices, null, 2), (error) =>{
+            (listaAprendices, null, 2), (error) => {
                 if (error) {
-                    return res.json({Error:  "No se puede editar."})
+                    return res.json({ Error: "No se puede editar." })
                 }
-            res.status(200).json(datosAprendiz)
-        })
+                res.status(200).json(datosAprendiz)
+            })
 
-        })
     })
+})
 
+//endpoint para eliminar aprendiz
+app.delete("/api/aprendices/:di", (req, res) => {
+    const diAprendiz = req.params.di
+    sistemaArchivo.readFile(rutaArchivojson, "utf-8", (error, datos) => {
+        if (error) {
+            return res.status(500).json({ Error: "Error de conexion" })
+        }
+        let listaAprendices = JSON.parse(datos)
 
+        //verificar si existe antes de borrar
+        const existe = listaAprendices.some(aprendiz => aprendiz.di == diAprendiz)
+        if (!existe) {
+            return res.status(404).json({ Error: "Aprendiz no encontrado." })
+        }
+
+        //filtrar la lista quitando el que coincide con el di
+        listaAprendices = listaAprendices.filter(aprendiz => aprendiz.di != diAprendiz)
+
+        //escritura de archivo
+        sistemaArchivo.writeFile(rutaArchivojson, JSON.stringify
+            (listaAprendices, null, 2), (error) => {
+                if (error) {
+                    return res.json({ Error: "No se puede eliminar." })
+                }
+                res.status(200).json({ mensaje: "Aprendiz eliminado correctamente." })
+            })
+    })
+})
 
 app.listen(PORT, () => {
     console.log(`SERVIDOR http://localhost:${PORT}
