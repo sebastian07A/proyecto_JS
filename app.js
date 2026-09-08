@@ -1,15 +1,24 @@
 const { error } = require("console")
 const express = require("express")
 const app = express()
+require("dotenv/config")
   //configuracion de body-parse
 app.use(express.json())
+app.use(express.urlencoded)
 const sistemaArchivo = require("fs")
 const ruta = require("path")
-
 const PORT = process.env.PORT || 3000;
-
 //ruta de mi archivo json
 const rutaArchivojson = ruta.join(__dirname, "aprendices.json")
+
+//importando mi middleware
+const reguistroMiddleware =require ("./middleware/registroMiddleware")
+const manejoErrores = require("./middleware/manejoErrores")
+const autenticacionToken = require ("./middleware/autenticacion")
+//mis middleware
+app.use(reguistroMiddleware)
+app.use(manejoErrores)
+app.use(autenticacionToken)
 
 app.get("/", (req, res) => {
     res.send(`<h1>Api aprendices</h1>`)
@@ -75,8 +84,51 @@ app.put  ("/api/aprendices/:di", (req, res) => {
         })
     })
 
+//endpoint para eliminar aprendiz
+app.delete("/api/aprendices/:di", (req, res) => {
+    const diAprendiz = req.params.di
+    sistemaArchivo.readFile(rutaArchivojson, "utf-8", (error, datos) => {
+        if (error) {
+            return res.status(500).json({ Error: "Error de conexion" })
+        }
+        let listaAprendices = JSON.parse(datos)
 
+        //verificar si existe antes de borrar
+        const existe = listaAprendices.some(aprendiz => aprendiz.di == diAprendiz)
+        if (!existe) {
+            return res.status(404).json({ Error: "Aprendiz no encontrado." })
+        }
 
+        //filtrar la lista quitando el que coincide con el di
+        listaAprendices = listaAprendices.filter(aprendiz => aprendiz.di != diAprendiz)
+
+        //escritura de archivo
+        sistemaArchivo.writeFile(rutaArchivojson, JSON.stringify
+            (listaAprendices, null, 2), (error) => {
+                if (error) {
+                    return res.json({ Error: "No se puede eliminar." })
+                }
+                res.status(200).json({ mensaje: "Aprendiz eliminado correctamente." })
+            })
+    })
+})
+
+//endpoint para provocar un error
+app.get("/error", (req, res, next)=>{
+    next(new Error("Error provocado, intencional"))   
+})
+
+//Middelware
+//app.use ((req,res, next) =>{
+//    console.log (`Tiempo en milisegundos: &{Date.now}`)
+//    next()
+//})
+
+app.get ("/rutaProtegida", (req, res)=>{
+    res.send("Ruta protegida")
+})
+
+//modo de escucha del servidor
 app.listen(PORT, () => {
     console.log(`SERVIDOR http://localhost:${PORT}
         http://127.0.0.1:${PORT}`);
