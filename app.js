@@ -1,28 +1,30 @@
 const { error } = require("console")
 const express = require("express")
 const app = express()
-<<<<<<< HEAD
 require("dotenv/config")
-  //configuracion de body-parse
-=======
+
 //configuracion de body-parse
->>>>>>> 8386ac80b3c7c3f3b34f70c3888024b9d6820f90
 app.use(express.json())
 app.use(express.urlencoded)
 const sistemaArchivo = require("fs")
 const ruta = require("path")
 const PORT = process.env.PORT || 3000;
+
+//importar jsonwebtoken
+const jswtoken = require("jsonwebtoken")
 //ruta de mi archivo json
 const rutaArchivojson = ruta.join(__dirname, "aprendices.json")
+
 
 //importando mi middleware
 const reguistroMiddleware =require ("./middleware/registroMiddleware")
 const manejoErrores = require("./middleware/manejoErrores")
-const autenticacionToken = require ("./middleware/autenticacion")
+const autenticacionToken = require ("./middleware/autenticacion.js")
+
 //mis middleware
 app.use(reguistroMiddleware)
 app.use(manejoErrores)
-app.use(autenticacionToken)
+app.use(autenticacion)
 
 app.get("/", (req, res) => {
     res.send(`<h1>Api aprendices</h1>`)
@@ -102,8 +104,7 @@ app.delete("/api/aprendices/:di", (req, res) => {
         if (!existe) {
             return res.status(404).json({ Error: "Aprendiz no encontrado." })
         }
-<<<<<<< HEAD
-=======
+
 
         //filtrar la lista quitando el que coincide con el di
         listaAprendices = listaAprendices.filter(aprendiz => aprendiz.di != diAprendiz)
@@ -118,21 +119,18 @@ app.delete("/api/aprendices/:di", (req, res) => {
             })
     })
 })
->>>>>>> 8386ac80b3c7c3f3b34f70c3888024b9d6820f90
 
-        //filtrar la lista quitando el que coincide con el di
-        listaAprendices = listaAprendices.filter(aprendiz => aprendiz.di != diAprendiz)
+ // filtrar la lista quitando el que coincide con el di
+ //   const listaAprendices = listaAprendices.filter(aprendiz => aprendiz.di != diAprendiz);
+ //   // escritura de archivo
+ //   sistemaArchivo.writeFile(rutaArchivojson, JSON.stringify(listaAprendices, null, 2), (error) => {
+   //     if (error) {
+   //         return res.json({ Error: "No se puede eliminar." });
+  //      }
+  //      res.status(200).json({ mensaje: "Aprendiz eliminado correctamente." });
+  //  });
 
-        //escritura de archivo
-        sistemaArchivo.writeFile(rutaArchivojson, JSON.stringify
-            (listaAprendices, null, 2), (error) => {
-                if (error) {
-                    return res.json({ Error: "No se puede eliminar." })
-                }
-                res.status(200).json({ mensaje: "Aprendiz eliminado correctamente." })
-            })
-    })
-})
+
 
 //endpoint para provocar un error
 app.get("/error", (req, res, next)=>{
@@ -145,8 +143,26 @@ app.get("/error", (req, res, next)=>{
 //    next()
 //})
 
-app.get ("/rutaProtegida", (req, res)=>{
+app.get ("/rutaProtegida", autenticacion,(req, res) =>{
     res.send("Ruta protegida")
+})
+
+app.post ("/login", (res, req)=>{
+    //capturar datos de sesion
+    const {usuario, clave} = req.body
+    //similar datos del usuario de una bd
+    const datosUsuario = {"usuarioBd": "sebas", "clave": mcns0710}
+    //validar datos de usuario
+    if (usuario !== datosUsuario.usuarioBd || clave == datosUsuario.clave){
+        res.status(400).json({Mensaje: "credenciales incorrecta"})
+    }
+    //generar y verificar 
+    const token = jswtoken.sign(
+        {usuario : usuario},
+        process.env.JWT_SECRETO,
+        {expiresIn: "1h"}
+    )
+
 })
 
 //modo de escucha del servidor
