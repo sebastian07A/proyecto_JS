@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node --watch app.js",
+    "dev": "node --watch src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -17,5 +16,19 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastian07A/proyecto_JS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sebastian07A/proyecto_JS/issues"
+  },
+  "homepage": "https://github.com/sebastian07A/proyecto_JS#readme",
+  "devDependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "prisma": "^7.10.0",
+    "tsx": "^4.23.15"
   }
 }
